@@ -1,91 +1,104 @@
-const menuIcon=document.getElementById("menu-icon");
-const navbar=document.querySelector(".navbar");
-const progressBar=document.querySelector(".progress-bar");
-const scrollTop=document.getElementById("scrollTop");
-const navLinks=document.querySelectorAll(".navbar a");
-const header=document.getElementById("header");
+const menuIcon = document.getElementById("menu-icon");
+const navbar = document.querySelector(".navbar");
+const progressBar = document.querySelector(".progress-bar");
+const scrollTop = document.getElementById("scrollTop");
+const navLinks = document.querySelectorAll(".navbar a");
+const header = document.getElementById("header");
+const sections = document.querySelectorAll("section");
 
-menuIcon.onclick=()=>{
+menuIcon.addEventListener("click", () => {
     navbar.classList.toggle("active");
     menuIcon.classList.toggle("fa-xmark");
-};
-
-navLinks.forEach(link=>{
-    link.onclick=()=>{
-        navbar.classList.remove("active");
-        menuIcon.classList.remove("fa-xmark");
-    };
 });
 
-window.addEventListener("scroll",()=>{
+navLinks.forEach(link => {
+    link.addEventListener("click", () => {
 
-    const scrollTopValue=document.documentElement.scrollTop;
-    const height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
-    const progress=(scrollTopValue/height)*100;
+        navbar.classList.remove("active");
+        menuIcon.classList.remove("fa-xmark");
 
-    progressBar.style.width=progress+"%";
+        navLinks.forEach(item => item.classList.remove("active"));
 
-    if(scrollTopValue>100){
-        header.style.background="rgba(7,11,23,.95)";
-        header.style.boxShadow="0 10px 30px rgba(0,0,0,.35)";
-    }else{
-        header.style.background="rgba(7,11,23,.82)";
-        header.style.boxShadow="none";
+        link.classList.add("active");
+    });
+});
+
+window.addEventListener("scroll", () => {
+
+    const scrollY = window.scrollY;
+
+    const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+    progressBar.style.width = (scrollY / height) * 100 + "%";
+
+    if (scrollY > 100) {
+        header.style.background = "rgba(7,11,23,.95)";
+        header.style.boxShadow = "0 10px 30px rgba(0,0,0,.35)";
+    } else {
+        header.style.background = "rgba(7,11,23,.82)";
+        header.style.boxShadow = "none";
     }
 
-    if(scrollTopValue>500){
+    if (scrollY > 500) {
         scrollTop.classList.add("show");
-    }else{
+    } else {
         scrollTop.classList.remove("show");
     }
 
-    let current="";
+    let currentSection = "";
 
-    document.querySelectorAll("section").forEach(section=>{
+    sections.forEach(section => {
 
-        const top=section.offsetTop-180;
-        const height=section.offsetHeight;
+        const top = section.offsetTop - 120;
+        const bottom = top + section.offsetHeight;
 
-        if(scrollTopValue>=top&&scrollTopValue<top+height){
-            current=section.getAttribute("id");
+        if (scrollY >= top && scrollY < bottom) {
+            currentSection = section.id;
         }
 
     });
 
-    navLinks.forEach(link=>{
+    navLinks.forEach(link => {
 
-        link.classList.remove("active-link");
+        link.classList.remove("active");
 
-        if(link.getAttribute("href")==="#"+current){
-            link.classList.add("active-link");
+        if (link.getAttribute("href") === "#" + currentSection) {
+            link.classList.add("active");
         }
 
     });
 
 });
 
-scrollTop.onclick=()=>{
+scrollTop.addEventListener("click", () => {
+
     window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-};
-
-const observer=new IntersectionObserver(entries=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-            entry.target.classList.add("show");
-        }
-
+        top: 0,
+        behavior: "smooth"
     });
 
-},{
-    threshold:.15
 });
 
-document.querySelectorAll(".skill-card,.timeline-item,.education-card,.stat-card,.project-card,.achievement-card,.contact-box,.contact-form,.about-image,.about-content").forEach(el=>{
+const observer = new IntersectionObserver(
+    entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+            }
+
+        });
+
+    },
+    {
+        threshold: 0.15
+    }
+);
+
+document.querySelectorAll(".skill-card,.timeline-item,.education-card,.stat-card,.project-card,.achievement-card,.contact-box,.contact-form,.about-image,.about-content").forEach(el => {
 
     el.classList.add("fade-up");
 
@@ -93,80 +106,86 @@ document.querySelectorAll(".skill-card,.timeline-item,.education-card,.stat-card
 
 });
 
-const words=[
+const words = [
     "Software Developer",
     "Full Stack Developer",
     "AI/ML Enthusiast",
     "Cloud Computing Learner"
 ];
 
-let wordIndex=0;
-let charIndex=0;
-let deleting=false;
+let wordIndex = 0;
+let charIndex = 0;
+let deleting = false;
 
-const typing=document.getElementById("typing-text");
+const typing = document.getElementById("typing-text");
 
-function typeEffect(){
+function typeEffect() {
 
-    const current=words[wordIndex];
+    const current = words[wordIndex];
 
-    if(!deleting){
+    if (!deleting) {
 
-        typing.textContent=current.substring(0,charIndex++);
+        typing.textContent = current.substring(0, charIndex++);
 
-        if(charIndex>current.length){
+        if (charIndex > current.length) {
 
-            deleting=true;
+            deleting = true;
 
-            setTimeout(typeEffect,1200);
+            setTimeout(typeEffect, 1200);
 
             return;
-
         }
 
-    }else{
+    } else {
 
-        typing.textContent=current.substring(0,charIndex--);
+        typing.textContent = current.substring(0, charIndex--);
 
-        if(charIndex===0){
+        if (charIndex === 0) {
 
-            deleting=false;
+            deleting = false;
 
             wordIndex++;
 
-            if(wordIndex===words.length){
-                wordIndex=0;
+            if (wordIndex >= words.length) {
+                wordIndex = 0;
             }
 
         }
 
     }
 
-    setTimeout(typeEffect,deleting?60:120);
+    setTimeout(typeEffect, deleting ? 60 : 120);
 
 }
 
 typeEffect();
 
-document.querySelector(".contact-form").addEventListener("submit",e=>{
+const contactForm = document.querySelector(".contact-form");
 
-    e.preventDefault();
+if (contactForm) {
 
-    const button=e.target.querySelector("button");
+    contactForm.addEventListener("submit", e => {
 
-    button.innerHTML="Message Sent ✓";
+        e.preventDefault();
 
-    button.style.background="linear-gradient(135deg,#16a34a,#22c55e)";
+        const button = e.target.querySelector("button");
 
-    setTimeout(()=>{
+        button.innerHTML = "Message Sent ✓";
 
-        button.innerHTML="Send Message";
+        button.style.background =
+            "linear-gradient(135deg,#16a34a,#22c55e)";
 
-        button.style.background="linear-gradient(135deg,#2563eb,#38bdf8)";
+        setTimeout(() => {
 
-        e.target.reset();
+            button.innerHTML = "Send Message";
 
-    },2500);
+            button.style.background =
+                "linear-gradient(135deg,#2563eb,#38bdf8)";
 
-});
+            e.target.reset();
 
+        }, 2500);
+
+    });
+
+}

@@ -41,7 +41,7 @@ Portfolio/
 │   ├── project2.png
 │   ├── project3.png
 │   ├── portfolio-preview.png
-│   └── RomilSrivastavaResume.pdf
+│   └── RomilSrivastava_Resume.pdf
 ```
 
 ## 📸 Featured Projects
@@ -60,7 +60,7 @@ Download my resume directly from the portfolio website.
 
 **Email:** romilfzd@gmail.com
 
-**Phone:** +91 8601618344
+**Phone:** +91 1234567890
 
 **Location:** Ayodhya, Uttar Pradesh, India
 
